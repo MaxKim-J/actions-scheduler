@@ -36,4 +36,4 @@ jobs:
             console.log(pull_list)
 
       # 해당 데이터 순회하면서 시간 체크하고 슬랙에 알람 보내기
-      - name: Use Node.js ${{ matrix.node-version }}
+      # - name: Use Node.js ${{ matrix.node-version }}
