@@ -1,0 +1,39 @@
+name: pull_request_check
+
+# on:
+#   schedule:
+#     - cron: '5 9-20 * * 1-5'
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # PR 메타데이터 추출하기
+      - name: get pr list
+        uses: actions/github-script@0.2.0
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const pull_list = await github.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sort: 'created',
+              base: "master",
+              state: "open"
+            });
+
+            console.log(pull_list)
+
+      # 해당 데이터 순회하면서 시간 체크하고 슬랙에 알람 보내기
+      - name: Use Node.js ${{ matrix.node-version }}
